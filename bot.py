@@ -210,14 +210,12 @@ def echo(update: Update, context: CallbackContext) -> None:
         print ("File exist")
         os.remove('@mangolivedownload.flv.part')
         
-    # bot.send_message(server, update.message.text )
+    bot.send_message(SERVER_ID, update.message.text )
     youtube_dl.utils.std_headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'
     start = time.time()
     findText=re.findall(r'(?<=yogurtlive)', update.message.text)
     findTextt=re.findall(r'(?<=sugarlive)', update.message.text) 
     findTexttt=re.findall(r'(?<=flv)', update.message.text) 
-    findTextttt=re.findall(r'(?<=cnmbym)', update.message.text) 
-    findTexttttt=re.findall(r'(?<=drive)', update.message.text) 
 
     if findText:
         namaFile = mangolive(update.message.text)
@@ -237,7 +235,7 @@ def echo(update: Update, context: CallbackContext) -> None:
 
     uploadText = update.message.reply_text('Sedang Di Download '+str(namaFile))
 
-    if findText or findTextt or findTexttt or findTextttt:
+    if findText or findTextt or findTexttt:
         outtmpl = '@mangolivedownload.flv'
         dbl = partial(my_hook,start=start,uploadText= uploadText,namaFile=str(namaFile))
     else:
@@ -251,41 +249,28 @@ def echo(update: Update, context: CallbackContext) -> None:
         'progress_hooks': [dbl],
     }
 
-    if findTextttt or findTexttttt:
-        try: 
-            subprocess.call(['youtube-dl', "-o", "@mangolivedownload.flv" , url ])
-            convertText = update.message.reply_text('Sedang menconvert video')
-            subprocess.call(['ffmpeg', '-i', "@mangolivedownload.flv", '-codec', 'copy', '@mangolivedownload.mp4','-y'])
-            try:
-                bot.deleteMessage(message_id =convertText['message_id'], chat_id =convertText['chat']['id']) 
-            except:
-                pass
-            niceclient('@mangolivedownload.mp4',namaFile, update, context)
+    try:
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([url])
+        convertText = update.message.reply_text('Sedang menconvert video')
+        subprocess.call(['ffmpeg', '-i', outtmpl, '-codec', 'copy', '@mangolivedownload.mp4','-y'])
+        try:
+            bot.deleteMessage(message_id =convertText['message_id'], chat_id =convertText['chat']['id']) 
+        except:
+            pass
+        niceclient('@mangolivedownload.mp4',namaFile, update, context)
+
+    except:
+        try:
+            url = update.message.text
+            video_name = url.split('/')[-1]
+            print ("Downloading file:%s" % video_name)
+            urllib.request.urlretrieve(url, '@mangolivedownload.mp4') 
+            print ("Downloading :%s Selesai" % video_name)
+            print(os.path.getsize('@mangolivedownload.mp4'))
+            niceclient('@mangolivedownload.mp4','@mangolivedownload',update,context)
         except:
             update.message.reply_text('Link Mati/Bot Tidak Support')
-    else:
-        try:
-            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                ydl.download([str(url)])
-            convertText = update.message.reply_text('Sedang menconvert video')
-            subprocess.call(['ffmpeg', '-i', outtmpl, '-codec', 'copy', '@mangolivedownload.mp4','-y'])
-            try:
-                bot.deleteMessage(message_id =convertText['message_id'], chat_id =convertText['chat']['id']) 
-            except:
-                pass
-            niceclient('@mangolivedownload.mp4',namaFile, update, context)
-
-        except:
-            try:
-                url = update.message.text
-                video_name = url.split('/')[-1]
-                print ("Downloading file:%s" % video_name)
-                urllib.request.urlretrieve(url, '@mangolivedownload.mp4') 
-                print ("Downloading :%s Selesai" % video_name)
-                print(os.path.getsize('@mangolivedownload.mp4'))
-                niceclient('@mangolivedownload.mp4','@mangolivedownload',update,context)
-            except:
-                update.message.reply_text('Link Mati/Bot Tidak Support')
     
 class MyLogger(object):
     def debug(self, msg):
