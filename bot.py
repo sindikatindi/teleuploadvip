@@ -286,7 +286,7 @@ def echo(update: Update, context: CallbackContext) -> None:
             print('Download Dari Honeylive')
         else:
             url=update.message.text
-            namaFile = '@mangodansugarlivebotinfo'
+            namaFile = 'Support by @mangodansugarlivebotinfo'
 
         uploadText = update.message.reply_text('Sedang Di Download '+str(namaFile))
 
