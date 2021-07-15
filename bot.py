@@ -201,32 +201,32 @@ def upload(update: Update, context: CallbackContext) -> None:
         content = f.readlines()
     print(content[0])
 
-    if os.path.isfile('@mangolivedownload.mp4'):
+    if os.path.isfile('Credit @mangodansugarlivebotinfo dan @lordcoki.mp4'):
         print ("File exist")
-        os.remove('@mangolivedownload.mp4')
+        os.remove('Credit @mangodansugarlivebotinfo dan @lordcoki.mp4')
         
     if os.path.isfile('@mangolivedownload.flv'):
         print ("File exist")
         update.message.reply_text('File Masih ada dan akan di upload ulang :)')
         convertText = update.message.reply_text('Sedang menconvert video')
-        subprocess.call(['ffmpeg', '-i', '@mangolivedownload.flv', '-codec', 'copy', '@mangolivedownload.mp4','-y'])
+        subprocess.call(['ffmpeg', '-i', '@mangolivedownload.flv', '-codec', 'copy', 'Credit @mangodansugarlivebotinfo dan @lordcoki.mp4','-y'])
         try:
             bot.deleteMessage(message_id =convertText['message_id'], chat_id =convertText['chat']['id']) 
         except:
             pass
-        niceclient('@mangolivedownload.mp4',content[0], update, context)
+        niceclient('Credit @mangodansugarlivebotinfo dan @lordcoki.mp4',content[0], update, context)
 
     elif os.path.isfile('@mangolivedownload.flv.part'):
         print ("File exist")
         update.message.reply_text('File Masih ada dan akan di upload ulang :)')
         os.rename('@mangolivedownload.flv.part','@mangolivedownload.flv')
         convertText = update.message.reply_text('Sedang menconvert video')
-        subprocess.call(['ffmpeg', '-i', '@mangolivedownload.flv', '-codec', 'copy', '@mangolivedownload.mp4','-y'])
+        subprocess.call(['ffmpeg', '-i', '@mangolivedownload.flv', '-codec', 'copy', 'Credit @mangodansugarlivebotinfo dan @lordcoki.mp4','-y'])
         try:
             bot.deleteMessage(message_id =convertText['message_id'], chat_id =convertText['chat']['id']) 
         except:
             pass
-        niceclient('@mangolivedownload.mp4',content[0], update, context)
+        niceclient('Credit @mangodansugarlivebotinfo dan @lordcoki.mp4',content[0], update, context)
 
     else:
         update.message.reply_text('File sudah terhapus, server merestart ulang :(')
@@ -241,13 +241,13 @@ def help_command(update: Update, context: CallbackContext) -> None:
 
 def echo(update: Update, context: CallbackContext) -> None:
     if  update.message.chat.id == akunUser or update.message.chat.id == SERVER_ID:
-        if os.path.isfile('@mangolivedownload.mp4'):
+        if os.path.isfile('Credit @mangodansugarlivebotinfo dan @lordcoki.mp4'):
             print ("File exist")
-            os.remove('@mangolivedownload.mp4')
+            os.remove('Credit @mangodansugarlivebotinfo dan @lordcoki.mp4')
 
-        if os.path.isfile('@mangolivedownload.mp4.part'):
+        if os.path.isfile('Credit @mangodansugarlivebotinfo dan @lordcoki.mp4.part'):
             print ("File exist")
-            os.remove('@mangolivedownload.mp4.part')
+            os.remove('Credit @mangodansugarlivebotinfo dan @lordcoki.mp4.part')
 
         if os.path.isfile('@mangolivedownload.flv'):
             print ("File exist")
@@ -286,7 +286,7 @@ def echo(update: Update, context: CallbackContext) -> None:
             print('Download Dari Honeylive')
         else:
             url=update.message.text
-            namaFile = '@mangolivedownload'
+            namaFile = '@mangodansugarlivebotinfo'
 
         uploadText = update.message.reply_text('Sedang Di Download '+str(namaFile))
 
@@ -294,7 +294,7 @@ def echo(update: Update, context: CallbackContext) -> None:
             outtmpl = '@mangolivedownload.flv'
             dbl = partial(my_hook,start=start,uploadText= uploadText,namaFile=str(namaFile))
         else:
-            outtmpl = '@mangolivedownload.mp4'
+            outtmpl = 'Credit @mangodansugarlivebotinfo dan @lordcoki.mp4'
             dbl = partial(progress_for_pyrogram,total='',ud_type='Sedang Download',start=start,uploadText= uploadText,namaFile=str(namaFile))
 
         ydl_opts = {
@@ -309,12 +309,12 @@ def echo(update: Update, context: CallbackContext) -> None:
                 subprocess.call(['ffmpeg', '-i', url, '-vcodec', 'copy', '-acodec', 'copy', '@mangolivedownload.flv','-y' ])
                 # subprocess.call(['youtube-dl', "-o", "@mangolivedownload.flv" , url ])
                 convertText = update.message.reply_text('Sedang menconvert video')
-                subprocess.call(['ffmpeg', '-i', "@mangolivedownload.flv", '-codec', 'copy', '@mangolivedownload.mp4','-y'])
+                subprocess.call(['ffmpeg', '-i', "@mangolivedownload.flv", '-codec', 'copy', 'Credit @mangodansugarlivebotinfo dan @lordcoki.mp4','-y'])
                 try:
                     bot.deleteMessage(message_id =convertText['message_id'], chat_id =convertText['chat']['id']) 
                 except:
                     pass
-                niceclient('@mangolivedownload.mp4',namaFile, update, context)
+                niceclient('Credit @mangodansugarlivebotinfo dan @lordcoki.mp4',namaFile, update, context)
             except:
                 update.message.reply_text('Link Mati/Bot Tidak Support')
         else:
@@ -322,22 +322,22 @@ def echo(update: Update, context: CallbackContext) -> None:
                 with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                     ydl.download([str(url)])
                 convertText = update.message.reply_text('Sedang menconvert video')
-                subprocess.call(['ffmpeg', '-i', outtmpl, '-codec', 'copy', '@mangolivedownload.mp4','-y'])
+                subprocess.call(['ffmpeg', '-i', outtmpl, '-codec', 'copy', 'Credit @mangodansugarlivebotinfo dan @lordcoki.mp4','-y'])
                 try:
                     bot.deleteMessage(message_id =convertText['message_id'], chat_id =convertText['chat']['id']) 
                 except:
                     pass
-                niceclient('@mangolivedownload.mp4',namaFile, update, context)
+                niceclient('Credit @mangodansugarlivebotinfo dan @lordcoki.mp4',namaFile, update, context)
 
             except:
                 try:
                     url = update.message.text
                     video_name = url.split('/')[-1]
                     print ("Downloading file:%s" % video_name)
-                    urllib.request.urlretrieve(url, '@mangolivedownload.mp4') 
+                    urllib.request.urlretrieve(url, 'Credit @mangodansugarlivebotinfo dan @lordcoki.mp4') 
                     print ("Downloading :%s Selesai" % video_name)
-                    print(os.path.getsize('@mangolivedownload.mp4'))
-                    niceclient('@mangolivedownload.mp4','@mangolivedownload',update,context)
+                    print(os.path.getsize('Credit @mangodansugarlivebotinfo dan @lordcoki.mp4'))
+                    niceclient('Credit @mangodansugarlivebotinfo dan @lordcoki.mp4','@mangolivedownload',update,context)
                 except:
                     update.message.reply_text('Link Mati/Bot Tidak Support')
     else:
