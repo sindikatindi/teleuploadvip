@@ -341,7 +341,10 @@ def echo(update: Update, context: CallbackContext) -> None:
                 except:
                     update.message.reply_text('Link Mati/Bot Tidak Support')
     else:
-        update.message.reply_text('''Order Bot DM: @lordcoki
+        update.message.reply_text('''
+Bot ini punya orang lain hehe :)
+kalau mau pakai bot bisa Order Bot DM: @lordcoki
+
 [KELEBIHAN BOT DOWNLOAD]
 1. Bot ini berfungsi sebagai pengganti IDM hp
 2. Support aplikasi Mango live, Sugar Live, Honey Live, Mlive, dll
