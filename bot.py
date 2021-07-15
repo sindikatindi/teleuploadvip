@@ -149,6 +149,52 @@ def sugarlive(link):
             f.write(str(content[1])+' - Sugarlive - '+str(waktu))
         return str(content[1])+' - Sugarlive - '+str(waktu)
 
+def honeylive(link):
+    fmt = "[%H:%M-%m/%d/%y]"
+    timezonelist = 'Asia/Jakarta'
+    now_time = datetime.now(timezone(timezonelist))
+    waktu = now_time.strftime(fmt)
+    content = link.split('_')[0].split("/")[4]
+
+    API_ENDPOINT = "https://dt001piwfw.d9sph.cn/App/Live/RecommendList?page=1"
+    headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json", 
+    "X-Token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE2MjYzMTY3OTMuNjc2NTI5LCJpYXQiOjE2MjYzMTY3OTMuNjc2NTI5LCJleHAiOjE2MjY1NzU5OTMuNjc2NTI5LCJpZCI6IjI1MjI4Iiwic2hvd19pZCI6IjEwMDI5NTc3NjQiLCJzdGF0dXMiOiIxIiwidHlwZSI6IjIiLCJsZXZlbCI6IjEiLCJ2aXAiOjF9.nQfc0AYV0ZEjHNqtsvptv8DrvVAPXSWOjFHKSFj4fpY",
+    }
+    r = requests.post(url = API_ENDPOINT, headers=headers, timeout=5)
+    data_live = r.json()
+
+    y = 2
+    x = True    
+    while x:
+        API_ENDPOINT = "https://dt001piwfw.d9sph.cn/App/Live/RecommendList?page="+str(y)
+        r = requests.post(url = API_ENDPOINT, headers=headers, timeout=5)
+        data_live_baru = r.json()
+        if not data_live_baru['result']:
+            x = False
+        else:
+            for data in data_live_baru['result']:
+                data_live['result'].append(data)
+        y=y+1
+    print(data_live)
+
+    for nama in data_live['result']:
+        if nama['cover'].split("_")[1].replace(".png","") == content:
+            print(nama['nickname'])
+            namaNickname = nama['nickname']
+
+
+    try:
+        with open("namahost.txt", "w", encoding="utf-8") as f:
+            f.write(str(namaNickname)+' - Honeylive - '+str(waktu))
+        return str(namaNickname)+' - Honeylive - '+str(waktu)
+    except:
+        with open("namahost.txt", "w", encoding="utf-8") as f:
+            f.write(str(content)+' - Honeylive - '+str(waktu))
+        return str(content)+' - Honeylive - '+str(waktu)
+
+
 def upload(update: Update, context: CallbackContext) -> None:
     # print(update)
     with open('namahost.txt') as f:
@@ -194,84 +240,124 @@ def help_command(update: Update, context: CallbackContext) -> None:
     update.message.reply_text('Help!')
 
 def echo(update: Update, context: CallbackContext) -> None:
-    if os.path.isfile('@mangolivedownload.mp4'):
-        print ("File exist")
-        os.remove('@mangolivedownload.mp4')
+    if  update.message.chat.id == akunUser or update.message.chat.id == SERVER_ID:
+        if os.path.isfile('@mangolivedownload.mp4'):
+            print ("File exist")
+            os.remove('@mangolivedownload.mp4')
 
-    if os.path.isfile('@mangolivedownload.mp4.part'):
-        print ("File exist")
-        os.remove('@mangolivedownload.mp4.part')
+        if os.path.isfile('@mangolivedownload.mp4.part'):
+            print ("File exist")
+            os.remove('@mangolivedownload.mp4.part')
 
-    if os.path.isfile('@mangolivedownload.flv'):
-        print ("File exist")
-        os.remove('@mangolivedownload.flv')
-        
-    if os.path.isfile('@mangolivedownload.flv.part'):
-        print ("File exist")
-        os.remove('@mangolivedownload.flv.part')
-        
-    bot.send_message(SERVER_ID, update.message.text )
-    youtube_dl.utils.std_headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'
-    start = time.time()
-    findText=re.findall(r'(?<=yogurtlive)', update.message.text)
-    findTextt=re.findall(r'(?<=sugarlive)', update.message.text) 
-    findTexttt=re.findall(r'(?<=flv)', update.message.text) 
+        if os.path.isfile('@mangolivedownload.flv'):
+            print ("File exist")
+            os.remove('@mangolivedownload.flv')
+            
+        if os.path.isfile('@mangolivedownload.flv.part'):
+            print ("File exist")
+            os.remove('@mangolivedownload.flv.part')
+            
+        # bot.send_message(server, update.message.text )
+        youtube_dl.utils.std_headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'
+        start = time.time()
+        findText=re.findall(r'(?<=yogurtlive)', update.message.text)
+        findTextt=re.findall(r'(?<=sugarlive)', update.message.text) 
+        findTexttt=re.findall(r'(?<=flv)', update.message.text) 
+        findTextttt=re.findall(r'(?<=cnmbym)', update.message.text) 
+        # findTexttttt=re.findall(r'(?<=drive)', update.message.text) 
 
-    if findText:
-        namaFile = mangolive(update.message.text)
-        url=update.message.text
-        url=url.replace('.flv','')
-        print(namaFile)
-        print('Download Dari Mangolive')
-    elif findTextt:
-        namaFile = sugarlive(update.message.text)
-        url=update.message.text
-        url=url.replace('.flv','')
-        print(namaFile)
-        print('Download Dari Sugarlive')
+        if findText:
+            namaFile = mangolive(update.message.text)
+            url=update.message.text
+            url=url.replace('.flv','')
+            print(namaFile)
+            print('Download Dari Mangolive')
+        elif findTextt:
+            namaFile = sugarlive(update.message.text)
+            url=update.message.text
+            url=url.replace('.flv','')
+            print(namaFile)
+            print('Download Dari Sugarlive')
+        elif findTextttt:
+            namaFile = honeylive(update.message.text)
+            url=update.message.text
+            url=url.replace('.flv','')
+            print(namaFile)
+            print('Download Dari Honeylive')
+        else:
+            url=update.message.text
+            namaFile = '@mangolivedownload'
+
+        uploadText = update.message.reply_text('Sedang Di Download '+str(namaFile))
+
+        if findText or findTextt or findTexttt or findTextttt:
+            outtmpl = '@mangolivedownload.flv'
+            dbl = partial(my_hook,start=start,uploadText= uploadText,namaFile=str(namaFile))
+        else:
+            outtmpl = '@mangolivedownload.mp4'
+            dbl = partial(progress_for_pyrogram,total='',ud_type='Sedang Download',start=start,uploadText= uploadText,namaFile=str(namaFile))
+
+        ydl_opts = {
+            'outtmpl': outtmpl,
+            'format': 'best',
+            'logger': MyLogger(),
+            'progress_hooks': [dbl],
+        }
+
+        if findTextttt:
+            try: 
+                subprocess.call(['ffmpeg', '-i', url, '-vcodec', 'copy', '-acodec', 'copy', '@mangolivedownload.flv','-y' ])
+                # subprocess.call(['youtube-dl', "-o", "@mangolivedownload.flv" , url ])
+                convertText = update.message.reply_text('Sedang menconvert video')
+                subprocess.call(['ffmpeg', '-i', "@mangolivedownload.flv", '-codec', 'copy', '@mangolivedownload.mp4','-y'])
+                try:
+                    bot.deleteMessage(message_id =convertText['message_id'], chat_id =convertText['chat']['id']) 
+                except:
+                    pass
+                niceclient('@mangolivedownload.mp4',namaFile, update, context)
+            except:
+                update.message.reply_text('Link Mati/Bot Tidak Support')
+        else:
+            try:
+                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                    ydl.download([str(url)])
+                convertText = update.message.reply_text('Sedang menconvert video')
+                subprocess.call(['ffmpeg', '-i', outtmpl, '-codec', 'copy', '@mangolivedownload.mp4','-y'])
+                try:
+                    bot.deleteMessage(message_id =convertText['message_id'], chat_id =convertText['chat']['id']) 
+                except:
+                    pass
+                niceclient('@mangolivedownload.mp4',namaFile, update, context)
+
+            except:
+                try:
+                    url = update.message.text
+                    video_name = url.split('/')[-1]
+                    print ("Downloading file:%s" % video_name)
+                    urllib.request.urlretrieve(url, '@mangolivedownload.mp4') 
+                    print ("Downloading :%s Selesai" % video_name)
+                    print(os.path.getsize('@mangolivedownload.mp4'))
+                    niceclient('@mangolivedownload.mp4','@mangolivedownload',update,context)
+                except:
+                    update.message.reply_text('Link Mati/Bot Tidak Support')
     else:
-        url=update.message.text
-        namaFile = '@mangolivedownload'
+        update.message.reply_text('''Order Bot DM: @lordcoki
+[KELEBIHAN BOT DOWNLOAD]
+1. Bot ini berfungsi sebagai pengganti IDM hp
+2. Support aplikasi Mango live, Sugar Live, Honey Live, Mlive, dll
+3. Tidak abisin KUOTA internet karena di donlot/upload di server bkn hp
+4. Tidak menuhin memory hp, karena vid kesimpen di telegram, bisa di play/donlot kpn aja
+5. Bisa menggunakan HP Andorid/Iphone
+6. Download/upload Otomatis (tinggal tidur aja hihi)
+7. Bagi member akan di masukkan ke GRUP VIP dan di sana ada ratusan VIDEO hasil SHARING member VIP.
+8. HAMPIR setiap hari ada link unlock host
 
-    uploadText = update.message.reply_text('Sedang Di Download '+str(namaFile))
 
-    if findText or findTextt or findTexttt:
-        outtmpl = '@mangolivedownload.flv'
-        dbl = partial(my_hook,start=start,uploadText= uploadText,namaFile=str(namaFile))
-    else:
-        outtmpl = '@mangolivedownload.mp4'
-        dbl = partial(progress_for_pyrogram,total='',ud_type='Sedang Download',start=start,uploadText= uploadText,namaFile=str(namaFile))
+Note : hasil video di bot gabisa diliat org lain, yg di grup cma yg mau sharing aja.
 
-    ydl_opts = {
-        'outtmpl': outtmpl,
-        'format': 'best',
-        'logger': MyLogger(),
-        'progress_hooks': [dbl],
-    }
-
-    try:
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([url])
-        convertText = update.message.reply_text('Sedang menconvert video')
-        subprocess.call(['ffmpeg', '-i', outtmpl, '-codec', 'copy', '@mangolivedownload.mp4','-y'])
-        try:
-            bot.deleteMessage(message_id =convertText['message_id'], chat_id =convertText['chat']['id']) 
-        except:
-            pass
-        niceclient('@mangolivedownload.mp4',namaFile, update, context)
-
-    except:
-        try:
-            url = update.message.text
-            video_name = url.split('/')[-1]
-            print ("Downloading file:%s" % video_name)
-            urllib.request.urlretrieve(url, '@mangolivedownload.mp4') 
-            print ("Downloading :%s Selesai" % video_name)
-            print(os.path.getsize('@mangolivedownload.mp4'))
-            niceclient('@mangolivedownload.mp4','@mangolivedownload',update,context)
-        except:
-            update.message.reply_text('Link Mati/Bot Tidak Support')
-    
+lengkapnya bisa baca di : https://t.me/botdownloadlivestreaming
+Untuk Order DM admin : @lordcoki
+            ''')
 class MyLogger(object):
     def debug(self, msg):
         pass
