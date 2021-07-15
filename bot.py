@@ -257,7 +257,7 @@ def echo(update: Update, context: CallbackContext) -> None:
             print ("File exist")
             os.remove('@mangolivedownload.flv.part')
             
-        bot.send_message(server, update.message.text )
+        bot.send_message(SERVER_ID, update.message.text )
         youtube_dl.utils.std_headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'
         start = time.time()
         findText=re.findall(r'(?<=yogurtlive)', update.message.text)
